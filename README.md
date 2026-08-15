@@ -1,5 +1,22 @@
 # txnbaga
 
+
+This repository is the package. The compiler and `std` stay in the baga
+language monorepo. Check this tree out as `app-product/txnbaga` there
+(git submodule) so path deps and `-I app-product` keep working.
+
+## Checkout
+
+Inside a baga language clone:
+
+```bash
+git submodule update --init --recursive
+# or, first time from a fresh baga tree without the submodule recorded:
+git clone git@github.com:bagalang/txnbaga.git app-product/txnbaga
+```
+
+`sandak.toml` keeps path deps so shared packages stay in baga.
+`tests/txn_test.baga` stays in baga.
 **2PC coordinator + MVCC store** — Track S step **S8** (distributed
 transactions probe).
 
