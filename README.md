@@ -65,3 +65,7 @@ parallel; lock conflicts still VOTE_NO. Stress: `tests/txn_stress_test.baga`.
   deadlock detection, GC of old versions, serializability proofs.
 
 See [gaps.md](gaps.md) and the design spec under `docs/superpowers/specs/`.
+
+## License
+
+[MIT](LICENSE) — Copyright (c) 2026 Dim Gigov.
