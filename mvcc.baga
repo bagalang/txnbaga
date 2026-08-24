@@ -68,3 +68,50 @@ fn mvcc_alloc_ts(s: MvccStore) -> i64 {
     s.next_ts = next_ts(s.next_ts)
     return t
 }
+
+// Drop versions older than the newest one with ts <= keep_ts.
+// Versions with ts > keep_ts stay (needed for newer snapshots).
+// keep_ts is the oldest live read timestamp. Returns deleted count.
+fn mvcc_gc(s: MvccStore, keep_ts: i64) -> i64 {
+    let mut keep = keep_ts
+    if keep < 1 {
+        keep = 1
+    }
+    let ks = map_keys(s.head)
+    let mut dropped: i64 = 0
+    let mut i: i64 = 0
+    while i < vec_len(ks) {
+        let k = vec_get(ks, i)
+        let mut ts = map_get(s.head, k)
+        let mut newest: i64 = 0
+        let mut saved_below: i64 = 0
+        while ts >= 1 {
+            let vk = mvcc_ver_key(k, ts)
+            if map_has(s.ver, vk) == 1 {
+                if ts > keep {
+                    if newest == 0 {
+                        newest = ts
+                    }
+                } else {
+                    if saved_below == 0 {
+                        saved_below = ts
+                        if newest == 0 {
+                            newest = ts
+                        }
+                    } else {
+                        map_del(s.ver, vk)
+                        dropped = dropped + 1
+                    }
+                }
+            }
+            ts = ts - 1
+        }
+        if newest == 0 {
+            map_del(s.head, k)
+        } else {
+            map_set(s.head, k, newest)
+        }
+        i = i + 1
+    }
+    return dropped
+}

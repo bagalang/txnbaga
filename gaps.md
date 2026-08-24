@@ -10,9 +10,11 @@ PREPARE by key range in a real system.
 Crash of the coordinator between PREPARE and COMMIT is unrecoverable
 (classic 2PC). Presumed-abort + WAL is future work (pairs with lsmbaga).
 
-## T3 — MVCC GC missing
+## T3 — MVCC GC missing — **closed 2026-08-24**
 
-Versions accumulate. Watermark GC is straightforward on `ver` map.
+**Shipped.** `mvcc_gc(store, keep_ts)` drops versions older than the
+newest one with `ts <= keep_ts`. Newer versions stay. `keep_ts` is the
+oldest live snapshot.
 
 ## T4 — max 2 keys per txn
 

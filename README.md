@@ -30,7 +30,7 @@ transactions probe).
 ## API
 
 ```baga
-fn mvcc_new() / mvcc_put_version / mvcc_get
+fn mvcc_new() / mvcc_put_version / mvcc_get / mvcc_gc(store, keep_ts)
 fn tpc_start() -> TpcCluster !Par
 fn tpc_put(c, key, val) -> i64 !Par          // 0 committed, -1 aborted
 fn tpc_txn(c, k1, v1, k2, v2) -> i64 !Par  // k2 < 0 → single key
