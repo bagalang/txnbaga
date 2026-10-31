@@ -126,6 +126,11 @@ fn tpc_participant(ctx: i64) -> i64 !Par {
                 }
             }
         }
+        // P56: външният cell е наш; nested съобщението — при st==1.
+        if st == 1 {
+            msg_free(cell2_1(r))
+        }
+        cell2_free(r)
     }
     return 0
 }

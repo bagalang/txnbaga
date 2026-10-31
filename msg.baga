@@ -68,4 +68,35 @@ fn gre_found(m: i64) -> i64 { return cell2_0(cell2_1(m)) }
 fn gre_val(m: i64) -> i64 { return cell2_0(cell2_1(cell2_1(m))) }
 fn gre_ts(m: i64) -> i64 { return cell2_1(cell2_1(cell2_1(m))) }
 
+// P56: nested cell2 освобождаване за 2PC съобщения.
+fn msg_free(m: i64) {
+    if m == 0 {
+        return
+    }
+    let t = msg_type(m)
+    if t == MT_PREPARE() {
+        let a = cell2_1(m)
+        let b = cell2_1(a)
+        let c = cell2_1(b)
+        let d = cell2_1(c)
+        let e = cell2_1(d)
+        cell2_free(e)
+        cell2_free(d)
+        cell2_free(c)
+        cell2_free(b)
+        cell2_free(a)
+    } else if t == MT_VOTE_YES() || t == MT_VOTE_NO() || t == MT_ACK() {
+        let a = cell2_1(m)
+        cell2_free(a)
+    } else if t == MT_COMMIT() || t == MT_ABORT() || t == MT_GET() || t == MT_GET_REP() {
+        let a = cell2_1(m)
+        let b = cell2_1(a)
+        cell2_free(b)
+        cell2_free(a)
+    }
+    cell2_free(m)
+}
+
+fn reply_free(r: i64) { cell2_free(r) }
+
 fn msg_stop() -> i64 { return cell2(MT_STOP(), 0) }
